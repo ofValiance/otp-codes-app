@@ -21,3 +21,6 @@ create table codes (
     expires_at timestamptz not null,
     used_at timestamptz
 );
+
+insert into otp_config (code_length, ttl_seconds)
+values (6, 300);

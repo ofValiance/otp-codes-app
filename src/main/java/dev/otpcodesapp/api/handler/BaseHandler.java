@@ -2,9 +2,7 @@ package dev.otpcodesapp.api.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import dev.otpcodesapp.api.exception.AdminAlreadyExistsException;
-import dev.otpcodesapp.api.exception.InvalidCredentialsException;
-import dev.otpcodesapp.api.exception.UsernameAlreadyTakenException;
+import dev.otpcodesapp.api.exception.*;
 import dev.otpcodesapp.util.JsonUtil;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,6 +22,8 @@ public abstract class BaseHandler extends JsonUtil implements HttpHandler {
             sendError(exchange, 409, "Conflict: " + e.getMessage());
         } catch (InvalidCredentialsException e) {
             sendError(exchange, 401, "Unauthorized: " + e.getMessage());
+        } catch (CodeDoesNotExistException | ExpiredCodeException | InvalidCodeException e) {
+            sendError(exchange, 400, "Bad Request: " + e.getMessage());
         } catch (Exception e) {
             sendError(exchange, 500, "Internal Server Error: " + e.getMessage());
         }

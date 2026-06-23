@@ -2,22 +2,26 @@ package dev.otpcodesapp.api.middleware;
 
 import com.sun.net.httpserver.Filter;
 import com.sun.net.httpserver.HttpExchange;
+
 import dev.otpcodesapp.api.dto.AuthorizedUser;
+import dev.otpcodesapp.model.User;
 import dev.otpcodesapp.util.JsonUtil;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+
 
 public class JwtAuthFilter extends Filter {
 
     private final JwtUtil jwtUtil;
-    protected final ObjectMapper mapper = new ObjectMapper();
+    private final User.Role requiredRole;
 
-    public JwtAuthFilter(JwtUtil jwtUtil) {
+    public JwtAuthFilter(JwtUtil jwtUtil, User.Role requiredRole) {
         this.jwtUtil = jwtUtil;
+        this.requiredRole = requiredRole;
     }
 
     @Override
@@ -34,9 +38,14 @@ public class JwtAuthFilter extends Filter {
         try {
             Claims claims = jwtUtil.parseToken(token);
             AuthorizedUser authorizedUser = new AuthorizedUser(
-                    claims.getSubject(),
+                    Long.parseLong(claims.getSubject()),
+                    claims.get("login", String.class),
                     claims.get("role", String.class)
             );
+            if (!requiredRole.equals(User.Role.valueOf(authorizedUser.role()))) {
+                JsonUtil.sendError(exchange, 403, "Access denied: insufficient privileges");
+                return;
+            }
             exchange.setAttribute("authorizedUser", authorizedUser);
             chain.doFilter(exchange);
         } catch (ExpiredJwtException e) {

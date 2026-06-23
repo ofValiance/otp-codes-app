@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -21,9 +22,10 @@ public class JwtUtil {
         this.ttlMillis = ttlMinutes * 60 * 1000;
     }
 
-    public String generateToken(String login, String role) {
+    public String generateToken(Long id, String login, String role) {
         return Jwts.builder()
-                .subject(login)
+                .subject(id.toString())
+                .claim("login", login)
                 .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + ttlMillis))

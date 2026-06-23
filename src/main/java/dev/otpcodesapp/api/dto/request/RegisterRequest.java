@@ -1,4 +1,4 @@
-package dev.otpcodesapp.api.dto;
+package dev.otpcodesapp.api.dto.request;
 
 
 public record RegisterRequest(

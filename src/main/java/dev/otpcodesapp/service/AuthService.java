@@ -1,8 +1,8 @@
 package dev.otpcodesapp.service;
 
-import dev.otpcodesapp.api.dto.LoginRequest;
-import dev.otpcodesapp.api.dto.LoginResponse;
-import dev.otpcodesapp.api.dto.RegisterRequest;
+import dev.otpcodesapp.api.dto.request.LoginRequest;
+import dev.otpcodesapp.api.dto.response.LoginResponse;
+import dev.otpcodesapp.api.dto.request.RegisterRequest;
 import dev.otpcodesapp.api.exception.AdminAlreadyExistsException;
 import dev.otpcodesapp.api.exception.BusinessException;
 import dev.otpcodesapp.api.exception.InvalidCredentialsException;
@@ -58,7 +58,7 @@ public class AuthService {
             if (ud.findByLogin(login).isPresent()) {
                 User user = ud.findByLogin(login).get();
                 if (password.equals(user.passwordHash())) {
-                    String token = jwtUtil.generateToken(user.login(), user.role().toString());
+                    String token = jwtUtil.generateToken(user.id(), user.login(), user.role().toString());
                     return new LoginResponse(user.login(), token);
                 } else {
                     throw new InvalidCredentialsException("Invalid password");

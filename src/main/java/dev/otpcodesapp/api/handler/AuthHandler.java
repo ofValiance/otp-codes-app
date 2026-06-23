@@ -2,9 +2,9 @@ package dev.otpcodesapp.api.handler;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import dev.otpcodesapp.api.dto.LoginRequest;
-import dev.otpcodesapp.api.dto.LoginResponse;
-import dev.otpcodesapp.api.dto.RegisterRequest;
+import dev.otpcodesapp.api.dto.request.LoginRequest;
+import dev.otpcodesapp.api.dto.response.LoginResponse;
+import dev.otpcodesapp.api.dto.request.RegisterRequest;
 import dev.otpcodesapp.service.AuthService;
 
 
