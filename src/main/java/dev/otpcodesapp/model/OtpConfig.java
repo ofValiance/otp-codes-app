@@ -1,7 +1,8 @@
 package dev.otpcodesapp.model;
 
+
 public record OtpConfig(
-        long id,
+        Long id,
         int codeLength,
         int ttlSeconds
 ) {}

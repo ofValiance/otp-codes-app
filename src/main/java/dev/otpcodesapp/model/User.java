@@ -1,7 +1,8 @@
 package dev.otpcodesapp.model;
 
+
 public record User(
-        long id,
+        Long id,
         String login,
         String passwordHash,
         Role role

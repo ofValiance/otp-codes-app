@@ -18,19 +18,19 @@ import java.util.Optional;
 public class UserDaoImpl implements UserDao {
 
     private static final String INSERT = """
-            INSERT INTO users (login, passwordHash, role)
+            INSERT INTO users (login, password_hash, role)
             VALUES (?, ?, ?)
-            RETURNING id, login, passwordHash, role
+            RETURNING id, login, password_hash, role
             """;
 
     private static final String SELECT_BY_ID = """
-            SELECT id, login, passwordHash, role
+            SELECT id, login, password_hash, role
             FROM users
             WHERE id = ?
             """;
 
     private static final String SELECT_BY_LOGIN = """
-            SELECT id, login, passwordHash, role
+            SELECT id, login, password_hash, role
             FROM users
             WHERE login = ?
             """;
@@ -55,12 +55,12 @@ public class UserDaoImpl implements UserDao {
             """;
 
     private static final String SELECT_ALL = """
-            SELECT id, login, passwordHash, role
+            SELECT id, login, password_hash, role
             FROM users
             """;
 
     private static final String SELECT_NON_ADMINS = """
-            SELECT id, login, passwordHash, role
+            SELECT id, login, password_hash, role
             FROM users
             WHERE role = 'USER'
             """;
@@ -201,7 +201,7 @@ public class UserDaoImpl implements UserDao {
         return new User(
                 rs.getLong("id"),
                 rs.getString("login"),
-                rs.getString("passwordHash"),
+                rs.getString("password_hash"),
                 User.Role.valueOf(rs.getString("role"))
         );
     }

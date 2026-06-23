@@ -2,10 +2,11 @@ package dev.otpcodesapp.model;
 
 import java.time.Instant;
 
+
 public record Code(
-        long id,
-        long userId,
-        long operationId,
+        Long id,
+        Long userId,
+        Long operationId,
         String codeHash,
         Status status,
         Instant createdAt,
