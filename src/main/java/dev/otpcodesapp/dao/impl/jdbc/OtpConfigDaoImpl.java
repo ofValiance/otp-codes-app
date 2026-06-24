@@ -57,7 +57,7 @@ public class OtpConfigDaoImpl implements Dao<OtpConfig, Long> {
     public boolean update(OtpConfig object) throws SQLException {
         try (Connection c = ConnectionProvider.INSTANCE.getConnection()) {
 
-            PreparedStatement ps = c.prepareStatement(SELECT_BY_ID);
+            PreparedStatement ps = c.prepareStatement(UPDATE);
             ps.setInt(1, object.codeLength());
             ps.setInt(2, object.ttlSeconds());
             ps.setLong(3, object.id());

@@ -7,9 +7,10 @@ import dev.otpcodesapp.api.exception.AdminAlreadyExistsException;
 import dev.otpcodesapp.api.exception.BusinessException;
 import dev.otpcodesapp.api.exception.InvalidCredentialsException;
 import dev.otpcodesapp.api.exception.UsernameAlreadyTakenException;
-import dev.otpcodesapp.api.middleware.JwtUtil;
+import dev.otpcodesapp.util.JwtUtil;
 import dev.otpcodesapp.dao.UserDao;
 import dev.otpcodesapp.model.User;
+import dev.otpcodesapp.util.HashUtil;
 
 import java.sql.SQLException;
 
@@ -27,7 +28,7 @@ public class AuthService {
     public void register(RegisterRequest rr) throws SQLException {
 
         String login = rr.login();
-        String password = rr.password();
+        String passwordHash = HashUtil.hashGenerate(rr.password());
         User.Role role = User.Role.valueOf(rr.role());
 
         if (role.equals(User.Role.USER)) {
@@ -35,7 +36,7 @@ public class AuthService {
             if (ud.findByLogin(login).isPresent()) {
                 throw new UsernameAlreadyTakenException("Username is already taken");
             } else {
-                ud.create(new User(null, login, password, role));
+                ud.create(new User(null, login, passwordHash, role));
             }
         } else if (role.equals(User.Role.ADMIN)) {
 
@@ -44,7 +45,7 @@ public class AuthService {
             } else if (ud.findByLogin(login).isPresent()) {
                 throw new UsernameAlreadyTakenException("Username is already taken");
             } else {
-                ud.create(new User(null, login, password, role));
+                ud.create(new User(null, login, passwordHash, role));
             }
         }
     }
@@ -57,7 +58,7 @@ public class AuthService {
         try {
             if (ud.findByLogin(login).isPresent()) {
                 User user = ud.findByLogin(login).get();
-                if (password.equals(user.passwordHash())) {
+                if (HashUtil.checkHash(password, user.passwordHash())) {
                     String token = jwtUtil.generateToken(user.id(), user.login(), user.role().toString());
                     return new LoginResponse(user.login(), token);
                 } else {

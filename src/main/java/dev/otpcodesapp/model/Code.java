@@ -7,7 +7,7 @@ public record Code(
         Long id,
         Long userId,
         Long operationId,
-        String codeHash,
+        int code,
         Status status,
         Instant createdAt,
         Instant expiresAt,

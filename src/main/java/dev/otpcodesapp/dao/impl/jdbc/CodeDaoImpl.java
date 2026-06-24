@@ -19,24 +19,24 @@ import java.util.Optional;
 public class CodeDaoImpl implements CodeDao {
 
     private static final String INSERT = """
-            INSERT INTO codes (user_id, operation_id, code_hash, expires_at)
+            INSERT INTO codes (user_id, operation_id, code, expires_at)
             VALUES (?, ?, ?, ?)
-            RETURNING id, user_id, operation_id, code_hash, status, created_at, expires_at, used_at
+            RETURNING id, user_id, operation_id, code, status, created_at, expires_at, used_at
             """;
 
     private static final String SELECT_BY_ID = """
-            SELECT id, user_id, operation_id, code_hash, status, created_at, expires_at, used_at
+            SELECT id, user_id, operation_id, code, status, created_at, expires_at, used_at
             FROM codes
             WHERE id = ?
             """;
 
     private static final String SELECT_ALL = """
-            SELECT id, user_id, operation_id, code_hash, status, created_at, expires_at, used_at
+            SELECT id, user_id, operation_id, code, status, created_at, expires_at, used_at
             FROM codes
             """;
 
     private static final String SELECT_ACTIVE_BY_USER_AND_OPERATION = """
-            SELECT id, user_id, operation_id, code_hash, status, created_at, expires_at, used_at
+            SELECT id, user_id, operation_id, code, status, created_at, expires_at, used_at
             FROM codes
             WHERE user_id = ?
               AND operation_id = ?
@@ -45,7 +45,7 @@ public class CodeDaoImpl implements CodeDao {
 
     private static final String UPDATE = """
             UPDATE codes
-            SET user_id = ?, operation_id = ?, code_hash = ?, status = ?, expires_at = ?, used_at = ?
+            SET user_id = ?, operation_id = ?, code = ?, status = ?, expires_at = ?, used_at = ?
             WHERE id = ?
             """;
 
@@ -73,7 +73,7 @@ public class CodeDaoImpl implements CodeDao {
             PreparedStatement ps = c.prepareStatement(INSERT);
             ps.setLong(1, object.userId());
             ps.setLong(2, object.operationId());
-            ps.setString(3, object.codeHash());
+            ps.setInt(3, object.code());
             ps.setTimestamp(4, Timestamp.from(object.expiresAt()));
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -137,7 +137,7 @@ public class CodeDaoImpl implements CodeDao {
             PreparedStatement ps = c.prepareStatement(UPDATE);
             ps.setLong(1, object.userId());
             ps.setLong(2, object.operationId());
-            ps.setString(3, object.codeHash());
+            ps.setInt(3, object.code());
             ps.setString(4, object.status().name());
             ps.setTimestamp(5, Timestamp.from(object.expiresAt()));
             ps.setTimestamp(6, object.usedAt() != null ? Timestamp.from(object.usedAt()) : null);
@@ -216,7 +216,7 @@ public class CodeDaoImpl implements CodeDao {
                 rs.getLong("id"),
                 rs.getLong("user_id"),
                 rs.getLong("operation_id"),
-                rs.getString("code_hash"),
+                rs.getInt("code"),
                 Status.valueOf(rs.getString("status")),
                 rs.getTimestamp("created_at").toInstant(),
                 rs.getTimestamp("expires_at").toInstant(),

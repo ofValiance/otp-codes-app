@@ -1,4 +1,4 @@
-package dev.otpcodesapp.api.middleware;
+package dev.otpcodesapp.util;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;

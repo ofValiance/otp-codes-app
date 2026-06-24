@@ -3,6 +3,7 @@ package dev.otpcodesapp.service;
 import dev.otpcodesapp.api.dto.request.GenerateRequest;
 import dev.otpcodesapp.api.dto.request.ValidateRequest;
 import dev.otpcodesapp.api.exception.CodeDoesNotExistException;
+import dev.otpcodesapp.api.exception.ConfigNotFoundException;
 import dev.otpcodesapp.api.exception.ExpiredCodeException;
 import dev.otpcodesapp.api.exception.InvalidCodeException;
 import dev.otpcodesapp.dao.CodeDao;
@@ -34,7 +35,7 @@ public class OtpService {
                         code.id(),
                         code.userId(),
                         code.operationId(),
-                        code.codeHash(),
+                        code.code(),
                         Code.Status.EXPIRED,
                         code.createdAt(),
                         Instant.now(),
@@ -52,7 +53,7 @@ public class OtpService {
 
     private int generateCode() throws SQLException {
 
-        OtpConfig config = ocd.findById(1L).get();
+        OtpConfig config = getConfig();
         int max = (int) Math.pow(10, config.codeLength());
         int min = max / 10;
 
@@ -61,17 +62,25 @@ public class OtpService {
 
     private Code createCode(Long userId, GenerateRequest gr, int code) throws SQLException {
 
-        OtpConfig config = ocd.findById(1L).get();
+        OtpConfig config = getConfig();
         return new Code(
                 null,
                 userId,
                 gr.operationId(),
-                String.valueOf(code),
+                code,
                 Code.Status.ACTIVE,
                 Instant.now(),
                 Instant.now().plusMillis(config.ttlSeconds() * 1000L),
                 null
         );
+    }
+
+    private OtpConfig getConfig() throws SQLException {
+
+        if (ocd.findById(1L).isEmpty()) {
+            throw new ConfigNotFoundException("Otp config does not exist");
+        }
+        return ocd.findById(1L).get();
     }
 
     public void validate(Long userId, ValidateRequest vr) throws SQLException {
@@ -83,7 +92,7 @@ public class OtpService {
                         code.id(),
                         code.userId(),
                         code.operationId(),
-                        code.codeHash(),
+                        code.code(),
                         Code.Status.EXPIRED,
                         code.createdAt(),
                         code.expiresAt(),
@@ -92,12 +101,12 @@ public class OtpService {
                 cd.update(expiredCode);
                 throw new ExpiredCodeException("Code is expired");
             }
-            if (code.codeHash().equals(vr.code())) {
+            if (code.code() == vr.code()) {
                 Code validCode = new Code(
                         code.id(),
                         code.userId(),
                         code.operationId(),
-                        code.codeHash(),
+                        code.code(),
                         Code.Status.USED,
                         code.createdAt(),
                         code.expiresAt(),

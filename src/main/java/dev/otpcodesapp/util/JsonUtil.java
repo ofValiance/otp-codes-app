@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 
-public abstract class JsonUtil {
+public class JsonUtil {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 

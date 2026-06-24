@@ -7,6 +7,7 @@ import dev.otpcodesapp.api.dto.AuthorizedUser;
 import dev.otpcodesapp.model.User;
 import dev.otpcodesapp.util.JsonUtil;
 
+import dev.otpcodesapp.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;

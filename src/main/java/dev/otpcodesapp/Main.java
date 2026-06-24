@@ -1,11 +1,13 @@
 package dev.otpcodesapp;
 
 import com.sun.net.httpserver.HttpServer;
+
 import dev.otpcodesapp.api.handler.AdminHandler;
 import dev.otpcodesapp.api.handler.AuthHandler;
 import dev.otpcodesapp.api.handler.OtpHandler;
 import dev.otpcodesapp.api.middleware.JwtAuthFilter;
-import dev.otpcodesapp.api.middleware.JwtUtil;
+import dev.otpcodesapp.service.AdminService;
+import dev.otpcodesapp.util.JwtUtil;
 import dev.otpcodesapp.dao.CodeDao;
 import dev.otpcodesapp.dao.UserDao;
 import dev.otpcodesapp.dao.impl.jdbc.CodeDaoImpl;
@@ -33,13 +35,14 @@ public class Main {
 
         AuthService authService = new AuthService(userDao, jwtUtil);
         OtpService otpService = new OtpService(codeDao, otpConfigDao);
+        AdminService adminService = new AdminService(otpConfigDao, userDao);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         server.setExecutor(Executors.newCachedThreadPool());
 
         server.createContext("/api/auth", new AuthHandler(authService));
         server.createContext("/api/otp", new OtpHandler(otpService)).getFilters().add(UserAuthFilter);
-        server.createContext("/api/admin", new AdminHandler()).getFilters().add(AdminAuthFilter);
+        server.createContext("/api/admin", new AdminHandler(adminService)).getFilters().add(AdminAuthFilter);
 
         server.start();
         System.out.println("Server started on port 8080");
