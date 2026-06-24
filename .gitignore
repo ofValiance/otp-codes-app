@@ -43,3 +43,4 @@ TASK.md
 .mvn/
 .env
 target/
+otp_output/*

@@ -22,7 +22,8 @@ public abstract class BaseHandler extends JsonUtil implements HttpHandler {
             sendError(exchange, 409, "Conflict: " + e.getMessage());
         } catch (InvalidCredentialsException e) {
             sendError(exchange, 401, "Unauthorized: " + e.getMessage());
-        } catch (CodeDoesNotExistException | ExpiredCodeException | InvalidCodeException | CanNotDeleteAdminException e) {
+        } catch (CodeDoesNotExistException | ExpiredCodeException | InvalidCodeException | CanNotDeleteAdminException |
+                 InvalidChannelOrDestinationException e) {
             sendError(exchange, 400, "Bad Request: " + e.getMessage());
         } catch (ConfigNotFoundException | UserNotFoundException e) {
             sendError(exchange, 404, "No content: " + e.getMessage());

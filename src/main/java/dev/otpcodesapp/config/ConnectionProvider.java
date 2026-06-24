@@ -3,8 +3,6 @@ package dev.otpcodesapp.config;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.HikariConfig;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -17,10 +15,9 @@ public enum ConnectionProvider {
     ConnectionProvider() {
 
         HikariConfig config = new HikariConfig();
-        Dotenv dotenv = Dotenv.load();
-        config.setJdbcUrl(dotenv.get("DB_URL"));
-        config.setUsername(dotenv.get("DB_USERNAME"));
-        config.setPassword(dotenv.get("DB_PASSWORD"));
+        config.setJdbcUrl(EnvManager.get("DB_URL"));
+        config.setUsername(EnvManager.get("DB_USERNAME"));
+        config.setPassword(EnvManager.get("DB_PASSWORD"));
         config.setDriverClassName("org.postgresql.Driver");
 
         this.dataSource = new HikariDataSource(config);

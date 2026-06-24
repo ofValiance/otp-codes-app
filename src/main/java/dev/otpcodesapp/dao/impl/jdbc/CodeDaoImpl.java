@@ -66,6 +66,12 @@ public class CodeDaoImpl implements CodeDao {
             WHERE id = ?
             """;
 
+    private static final String MARK_EXPIRED = """
+            UPDATE codes
+            SET status = 'EXPIRED'
+            WHERE status = 'ACTIVE' AND expires_at < NOW()
+            """;
+
     @Override
     public Code create(Code object) throws SQLException {
         try (Connection c = ConnectionProvider.INSTANCE.getConnection()) {
@@ -187,6 +193,18 @@ public class CodeDaoImpl implements CodeDao {
             PreparedStatement ps = c.prepareStatement(MARK_USED);
             ps.setLong(1, id);
             ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("[JDBC Error] " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void markExpiredBatch() throws SQLException {
+        try (Connection c = ConnectionProvider.INSTANCE.getConnection()) {
+
+            PreparedStatement ps = c.prepareStatement(MARK_EXPIRED);
+            ps.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println("[JDBC Error] " + e.getMessage());
         }

@@ -9,13 +9,14 @@ curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: applicati
 curl -i -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"login\": \"user1\", \"password\": \"1234\"}"
 
 ### generate
-curl -i -X POST http://localhost:8080/api/otp/generate -H "Content-Type: application/json" -H "Authorization: Bearer " -d "{\"operationId\": \"1\", \"channel\": \"FILE\", \"destination\": \"root\"}"
+curl -i -X POST http://localhost:8080/api/otp/generate -H "Content-Type: application/json" -H "Authorization: Bearer 
+" -d "{\"operationId\": \"1\", \"channel\": \"FILE\", \"destination\": \"user1/code.txt\"}"
 
 ### validate
 curl -i -X POST http://localhost:8080/api/otp/validate -H "Content-Type: application/json" -H "Authorization: Bearer " -d "{\"operationId\": \"1\", \"code\": \"317\"}"
 
 ### update config
-curl -i -X PUT http://localhost:8080/api/admin/otp-config -H "Content-Type: application/json" -H "Authorization: Bearer " -d "{\"codeLength\": \"3\", \"ttlSeconds\": \"300\"}"
+curl -i -X PUT http://localhost:8080/api/admin/otp-config -H "Content-Type: application/json" -H "Authorization: Bearer " -d "{\"codeLength\": \"6\", \"ttlSeconds\": \"300\"}"
 
 ### get config
 curl -i -X GET http://localhost:8080/api/admin/otp-config -H "Content-Type: application/json" -H "Authorization: Bearer "
