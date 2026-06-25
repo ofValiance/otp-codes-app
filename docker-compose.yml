@@ -33,7 +33,7 @@ services:
       JWT_KEY: ${JWT_KEY}
       OUTPUT_PATH: ${OUTPUT_PATH}
     volumes:
-      - ./otp_output:/app/otp_output
+      - ${OUTPUT_PATH}:/app/otp_output
     depends_on:
       db:
         condition: service_healthy
