@@ -15,9 +15,9 @@ public enum ConnectionProvider {
     ConnectionProvider() {
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(EnvManager.get("DB_URL"));
-        config.setUsername(EnvManager.get("DB_USERNAME"));
-        config.setPassword(EnvManager.get("DB_PASSWORD"));
+        config.setJdbcUrl("jdbc:postgresql://" + EnvManager.getString("DB_HOST") + ":" + EnvManager.getInt("DB_PORT") + "/" + EnvManager.getString("DB_NAME"));
+        config.setUsername(EnvManager.getString("DB_USER"));
+        config.setPassword(EnvManager.getString("DB_PASSWORD"));
         config.setDriverClassName("org.postgresql.Driver");
 
         this.dataSource = new HikariDataSource(config);

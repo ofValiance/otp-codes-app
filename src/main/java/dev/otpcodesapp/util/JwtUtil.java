@@ -24,7 +24,7 @@ public class JwtUtil {
 
     public JwtUtil(long ttlMinutes) {
         logger.info("Initializing JwtUtil with TTL: {} minutes", ttlMinutes);
-        jwtKey = Keys.hmacShaKeyFor(EnvManager.get("JWT_KEY").getBytes(StandardCharsets.UTF_8));
+        jwtKey = Keys.hmacShaKeyFor(EnvManager.getString("JWT_KEY").getBytes(StandardCharsets.UTF_8));
         this.ttlMillis = ttlMinutes * 60 * 1000;
     }
 

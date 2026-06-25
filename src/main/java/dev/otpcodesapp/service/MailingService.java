@@ -63,7 +63,7 @@ public class MailingService {
         logger.debug("Saving code to file: {}", strPath);
         try {
             Path path = Path.of(strPath);
-            Path basePath = Path.of(EnvManager.get("OUTPUT_PATH"));
+            Path basePath = Path.of(EnvManager.getString("OUTPUT_PATH"));
             Path outputPath = basePath.resolve(path);
             Path parentDir = outputPath.getParent();
             if (parentDir != null) {

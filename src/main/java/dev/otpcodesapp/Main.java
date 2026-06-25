@@ -1,5 +1,6 @@
 package dev.otpcodesapp;
 
+import dev.otpcodesapp.config.EnvManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ public class Main {
         OtpService otpService = new OtpService(codeDao, otpConfigDao, mailingService);
         AdminService adminService = new AdminService(otpConfigDao, userDao);
 
-        int port = 8080;
+        int port = EnvManager.getInt("SERVER_PORT");
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.setExecutor(Executors.newCachedThreadPool());
 
